@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
+import { Music } from 'lucide-react'
 
 const Auth = () => {
   const navigate = useNavigate()
@@ -50,61 +51,93 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-md space-y-8 bg-black/20 p-8 rounded-2xl backdrop-blur-sm">
-        <div>
-          <h2 className="text-center text-3xl font-bold tracking-tight">
-            {isSignUp ? 'Create your account' : 'Sign in to your account'}
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden bg-background">
+      {/* Background gradient effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 animate-gradient" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
+      
+      <div className="w-full max-w-md space-y-8 relative">
+        {/* Logo and Title Section */}
+        <div className="text-center space-y-4">
+          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mx-auto animate-fade-in">
+            <Music className="w-8 h-8 text-primary" />
+          </div>
+          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+            {isSignUp ? 'Create your account' : 'Welcome back'}
           </h2>
+          <p className="text-muted-foreground">
+            {isSignUp 
+              ? 'Join AudioGrove to start your musical journey' 
+              : 'Sign in to continue your musical journey'}
+          </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleAuth}>
-          {isSignUp && (
-            <div>
-              <Label htmlFor="username">Username</Label>
+
+        {/* Auth Form */}
+        <div className="glass-card p-8 rounded-2xl backdrop-blur-xl relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/10" />
+          <form className="space-y-6 relative" onSubmit={handleAuth}>
+            {isSignUp && (
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  required
+                  value={formData.username}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  className="bg-white/5 border-white/10 focus:border-primary/50 transition-colors"
+                  placeholder="johndoe"
+                />
+              </div>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="email">Email address</Label>
               <Input
-                id="username"
-                type="text"
+                id="email"
+                type="email"
                 required
-                value={formData.username}
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                className="mt-1"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="bg-white/5 border-white/10 focus:border-primary/50 transition-colors"
+                placeholder="john@example.com"
               />
             </div>
-          )}
-          <div>
-            <Label htmlFor="email">Email address</Label>
-            <Input
-              id="email"
-              type="email"
-              required
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              required
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="mt-1"
-            />
-          </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Loading...' : isSignUp ? 'Sign up' : 'Sign in'}
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            className="w-full"
-            onClick={() => setIsSignUp(!isSignUp)}
-          >
-            {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
-          </Button>
-        </form>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                required
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                className="bg-white/5 border-white/10 focus:border-primary/50 transition-colors"
+                placeholder="••••••••"
+              />
+            </div>
+            <Button
+              type="submit"
+              className="w-full relative overflow-hidden group transition-all duration-200 bg-primary hover:bg-primary/90"
+              disabled={isLoading}
+            >
+              <span className="relative z-10">
+                {isLoading ? 'Loading...' : isSignUp ? 'Sign up' : 'Sign in'}
+              </span>
+              <div className="absolute inset-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left bg-gradient-to-r from-white/0 via-white/25 to-white/0" />
+            </Button>
+          </form>
+        </div>
+
+        {/* Toggle Auth Mode */}
+        <Button
+          type="button"
+          variant="ghost"
+          className="w-full hover:bg-white/5 transition-colors"
+          onClick={() => setIsSignUp(!isSignUp)}
+        >
+          {isSignUp 
+            ? 'Already have an account? Sign in' 
+            : "Don't have an account? Sign up"}
+        </Button>
       </div>
     </div>
   )
